@@ -1,7 +1,8 @@
-const pool = require('../config/db');
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
+import { pool } from '../config/db.js';   // tu archivo de conexión existente
 
-exports.registerUser = async (req, res) => {
+
+export async function registerUser(req, res){
   const { email, password, display_name } = req.body;
   try {
     const hash = await bcrypt.hash(password, 10);
@@ -16,7 +17,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.getUsers = async (req, res) => {
+export async function getUsers (req, res){ //solo id, email y display_name
   const [rows] = await pool.query('SELECT id, email, display_name FROM users');
   res.json(rows);
 };
