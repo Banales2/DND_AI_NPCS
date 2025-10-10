@@ -51,6 +51,17 @@ export async function createNPC(req, res) {
 }
 
 export async function getNpcs (req,res){
-  const [rows] = await pool.query('SELECT id, name, race FROM npcs');
+  const [rows] = await pool.query('SELECT id, name, race, user_id FROM npcs');
   res.json(rows);
 };
+
+export async function getNpcById(req, res) {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.execute('SELECT * FROM npcs WHERE id=?', [id]);
+    if (rows.length === 0) return res.status(404).json({ error: 'NPC no encontrado' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener el NPC' });
+  }
+}
