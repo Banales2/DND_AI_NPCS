@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Opcional: estilos globales */
+@layer base {
+  html, body {
+    @apply bg-gray-100 text-gray-900 min-h-screen;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-gray-800;
+  }
+
+  a {
+    @apply text-blue-600 hover:text-blue-800 transition-colors;
+  }
+
+  button {
+    @apply px-4 py-2 rounded-lg font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition;
+  }
+}
