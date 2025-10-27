@@ -1,20 +1,57 @@
 @import "tailwindcss";
 
-/* Opcional: estilos globales */
-@layer base {
-  html, body {
-    @apply bg-gray-100 text-gray-900 min-h-screen;
-  }
+/* 🌑 Modo oscuro */
+body {
+  font-family: 'Cinzel Decorative', serif;
+  background: radial-gradient(circle at 30% 10%, #003322 0%, #001a10 40%, #000000 90%);
+  color: white;
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-attachment: fixed;
+  transition: background 1s ease-in-out, color 1s ease-in-out;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold text-gray-800;
-  }
+/* 🌞 Modo claro */
+body.light-mode {
+  background: radial-gradient(circle at 40% 20%, #a8f0c1 0%, #6dc98b 60%, #1a3b2a 100%);
+  color: #111;
+}
 
-  a {
-    @apply text-blue-600 hover:text-blue-800 transition-colors;
-  }
+/* Textos claros */
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3 {
+  color: #0f2d20;
+  text-shadow: 0 0 10px #b5ffd1, 0 0 25px #70ff9f;
+}
 
-  button {
-    @apply px-4 py-2 rounded-lg font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition;
-  }
+/* Navbar Light */
+body.light-mode nav {
+  color: #111;
+}
+
+body.light-mode a {
+  color: #0b3020;
+}
+
+body.light-mode a:hover {
+  color: #004422;
+  text-shadow: 0 0 10px #70ff9f;
+}
+
+/* Botones light mode */
+body.light-mode button {
+  background-color: white;
+  color: #0a331f;
+  border: none;
+}
+
+body.light-mode button:hover {
+  color: #006644;
+  text-shadow: 0 0 10px #70ff9f;
+}
+
+/* Suaviza transición general */
+* {
+  transition: color 0.3s ease, background 0.8s ease, text-shadow 0.3s ease;
 }
