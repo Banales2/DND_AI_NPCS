@@ -1,6 +1,19 @@
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    window.dispatchEvent(new Event("userUpdate"));
+
+    if (!token && user) {
+      localStorage.removeItem("user");
+      window.dispatchEvent(new Event("userUpdate"));
+      console.log("⚠️ Token perdido, cerrando sesión automáticamente");
+    }
+  }, []);
+
   return (
     <div className="flex flex-col justify-center items-center h-screen text-center relative overflow-hidden">
       {/* ✨ Fondo de partículas */}

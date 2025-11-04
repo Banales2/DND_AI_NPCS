@@ -46,13 +46,17 @@ export default function AuthPage() {
           password,
         });
 
-        const displayName = res.data?.user?.display_name || "aventurero";
-        setMessage(`Bienvenido, ${displayName}!`);
+        const user = res.data?.user;
+        setMessage(`Bienvenido, ${user.display_name || "aventurero"}!`);
+        // 🔹 Guardar token y toda la info del usuario, incluida profile_image_url
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("user", JSON.stringify(user));
 
         // 🔹 Redirige después de 1 segundo
-        setTimeout(() => navigate("/conversations"), 1000);
+        setTimeout(() => {
+          navigate("/conversations");
+          window.dispatchEvent(new Event("storage")); // 🔹 dispara el listener de Navbar
+        }, 1000);
       } else {
         const res = await axios.post(`${backendURL}/users/register`, {
           email,

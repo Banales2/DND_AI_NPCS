@@ -53,7 +53,8 @@ export async function login(req, res) {
     user: {
       id: user.id,
       email: user.email,
-      display_name: user.display_name
+      display_name: user.display_name,
+      profile_image_url: user.profile_image_url || null
     }
   });
 }

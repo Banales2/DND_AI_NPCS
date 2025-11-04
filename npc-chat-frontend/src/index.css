@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 /* 🌑 Modo oscuro */
+
+h1, h2, h3 {
+  font-family: 'Cinzel Decorative', sans-serif;
+}
+
 body {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'Open Sans', sans-serif;
   background: radial-gradient(circle at 30% 10%, #003322 0%, #001a10 40%, #000000 90%);
   color: white;
   overflow-x: hidden;
@@ -54,4 +59,8 @@ body.light-mode button:hover {
 /* Suaviza transición general */
 * {
   transition: color 0.3s ease, background 0.8s ease, text-shadow 0.3s ease;
+}
+
+textarea {
+  overflow: hidden !important;
 }
