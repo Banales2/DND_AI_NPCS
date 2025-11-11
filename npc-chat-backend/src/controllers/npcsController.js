@@ -72,6 +72,11 @@ export async function getNpcById(req, res) {
   }
 }
 
+export async function findNpcById(npcId) {
+  const [rows] = await pool.query('SELECT * FROM npcs WHERE id = ?', [npcId]);
+  return rows[0] || null;
+}
+
 export async function updateNPC(req, res) {
   try {
     const { id } = req.params;

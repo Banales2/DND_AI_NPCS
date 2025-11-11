@@ -84,7 +84,6 @@ export async function getMessagesByConversation(req, res) {
   }
 }
 
-// Obtener los mensajes de un remitente (usuario o NPC) en una conversación
 export const getMessagesBySenderInConversation = async (req, res) => {
   try {
     const { conversationId, senderId } = req.params;
@@ -109,3 +108,11 @@ export const getMessagesBySenderInConversation = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener mensajes del remitente.' });
   }
 };
+
+export async function insertMessage(conversationId, sender_type, sender_id, content, recipients = null) {
+  await pool.execute(
+    `INSERT INTO messages (conversation_id, sender_type, sender_id, content, recipients, created_at)
+     VALUES (?, ?, ?, ?, ?, NOW())`,
+    [conversationId, sender_type, sender_id, content, JSON.stringify(recipients)]
+  );
+}

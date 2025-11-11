@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -8,6 +8,7 @@ import AuthPage from "./pages/AuthPage";
 import About from "./pages/About";
 import NPCViewPage from "./pages/NPCViewPage";
 import Account from "./pages/Account";
+import ConversationDetail from "./pages/ConversationDetail";
 import "./index.css";
 
 function App() {
@@ -20,7 +21,23 @@ function App() {
 
   return (
     <Router>
-      <Navbar toggleTheme={toggleTheme} isDark={isDark} />
+      <AppContent toggleTheme={toggleTheme} isDark={isDark} />
+    </Router>
+  );
+}
+
+function AppContent({ toggleTheme, isDark }) {
+  const location = useLocation();
+
+  // Oculta la navbar en ConversationDetail
+  const hideNavbarRoutes = ["/conversations/"];
+  const shouldHideNavbar = hideNavbarRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
+
+  return (
+    <>
+      {!shouldHideNavbar && <Navbar toggleTheme={toggleTheme} isDark={isDark} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/conversations" element={<Conversations />} />
@@ -29,9 +46,12 @@ function App() {
         <Route path="/login" element={<AuthPage />} />
         <Route path="/account" element={<Account />} />
         <Route path="/npc/:id" element={<NPCViewPage />} />
+        <Route path="/conversations/:id" element={<ConversationDetail />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
 export default App;
+
+

@@ -56,15 +56,11 @@ export async function getParticipantsByConversationId(req, res) {
 
   try {
     const [rows] = await pool.query(`
-      SELECT n.id, n.name, n.race, n.user_id
+      SELECT n.id, n.name, n.race, n.user_id, n.class, n.image_url
       FROM conversation_participants cp
       JOIN npcs n ON cp.participant_id = n.id
       WHERE cp.conversation_id = ?
     `, [conversationId]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'No hay participantes en esta conversación' });
-    }
 
     res.json(rows);
   } catch (err) {

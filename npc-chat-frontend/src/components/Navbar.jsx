@@ -6,6 +6,7 @@ export default function Navbar({ toggleTheme, isDark }) {
   const [user, setUser] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const backendURL = "http://localhost:3000";
 
   const links = [
     { name: "Home", path: "/" },
@@ -14,33 +15,54 @@ export default function Navbar({ toggleTheme, isDark }) {
     { name: "About", path: "/about" },
   ];
 
-  // 🔹 Detecta usuario en localStorage al montar y en cambios de otras pestañas
-  useEffect(() => {
-    const checkUser = () => {
-      const storedUser = localStorage.getItem("user");
-      const storedToken = localStorage.getItem("token");
+  // ✅ Función para verificar si el token sigue siendo válido
+  const verifyToken = async () => {
+    const token = localStorage.getItem("token");
 
-      if (!storedToken) {
+    if (!token) {
+      localStorage.removeItem("user");
+      setUser(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendURL}/auth/verify`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const storedUser = localStorage.getItem("user");
+        setUser(storedUser ? JSON.parse(storedUser) : data.user);
+      } else {
+        // 🔹 Token inválido → limpiar todo
+        localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
-        return;
       }
+    } catch (error) {
+      console.error("Error verificando token:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
+    }
+  };
 
-      setUser(storedUser ? JSON.parse(storedUser) : null);
-    };
+  // 🔹 Verificar token al montar y en intervalos
+  useEffect(() => {
+    verifyToken();
 
-    checkUser();
-
-    window.addEventListener("userUpdate", checkUser);
-    window.addEventListener("storage", checkUser);
-
-    // 🔹 Nuevo: verificación periódica cada 5 segundos
-    const interval = setInterval(checkUser, 5000);
+    const interval = setInterval(verifyToken, 10000); // cada 10 segundos
+    window.addEventListener("storage", verifyToken);
+    window.addEventListener("userUpdate", verifyToken);
 
     return () => {
-      window.removeEventListener("userUpdate", checkUser);
-      window.removeEventListener("storage", checkUser);
       clearInterval(interval);
+      window.removeEventListener("storage", verifyToken);
+      window.removeEventListener("userUpdate", verifyToken);
     };
   }, []);
 
@@ -59,7 +81,10 @@ export default function Navbar({ toggleTheme, isDark }) {
           {links.map((link, i) => (
             <motion.li
               key={i}
-              whileHover={{ scale: 1.1, textShadow: "0 0 10px #00ffcc, 0 0 25px #00ffcc" }}
+              whileHover={{
+                scale: 1.1,
+                textShadow: "0 0 10px #00ffcc, 0 0 25px #00ffcc",
+              }}
               className={`cursor-pointer transition-all duration-300 ${
                 location.pathname === link.path
                   ? "text-[#00ffcc] drop-shadow-[0_0_12px_#00ffcc]"
@@ -70,7 +95,7 @@ export default function Navbar({ toggleTheme, isDark }) {
             </motion.li>
           ))}
 
-          {/* 🔹 Avatar si hay usuario, si no Login */}
+          {/* 🔹 Si hay usuario → mostrar avatar, si no → login */}
           {user ? (
             <li>
               <div
@@ -94,7 +119,10 @@ export default function Navbar({ toggleTheme, isDark }) {
             </li>
           ) : (
             <motion.li
-              whileHover={{ scale: 1.1, textShadow: "0 0 10px #00ffcc, 0 0 25px #00ffcc" }}
+              whileHover={{
+                scale: 1.1,
+                textShadow: "0 0 10px #00ffcc, 0 0 25px #00ffcc",
+              }}
               className={`cursor-pointer transition-all duration-300 ${
                 location.pathname === "/login"
                   ? "text-[#00ffcc] drop-shadow-[0_0_12px_#00ffcc]"

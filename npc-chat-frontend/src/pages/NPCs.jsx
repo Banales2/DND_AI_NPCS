@@ -3,7 +3,6 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-
 export default function NPCPage() {
   const [npcs, setNpcs] = useState([]);
   const navigate = useNavigate();
